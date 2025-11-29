@@ -2,16 +2,16 @@ import { config } from '../config/config.js';
 import { ApiError } from '../utils/errors.js';
 
 export function validateApiKey(req, res, next) {
-  const apiKey = config.openRouterApiKey;
+  const requestApiKey = req.headers['x-api-key'];
 
-  if (!apiKey) {
+  if (!requestApiKey) {
     throw new ApiError(2001, 'API anahtarı eksik');
   }
 
-  if (typeof apiKey !== 'string' || apiKey.length < 10) {
-    throw new ApiError(2003, 'API anahtarı formatı hatalı');
+  if (requestApiKey !== config.apiKey) {
+    throw new ApiError(2002, 'API anahtarı geçersiz');
   }
 
-  req.apiKey = apiKey;
+  req.openRouterApiKey = config.openRouterApiKey;
   next();
 }

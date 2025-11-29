@@ -24,7 +24,7 @@ export async function handleTranslation(req, res) {
     throw new ApiError(1003, 'Dosya içeriği okunamadı');
   }
 
-  const translatedContent = await translateSubtitle(fileContent, fileExtension, req.apiKey);
+  const translatedContent = await translateSubtitle(fileContent, fileExtension, req.openRouterApiKey);
 
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   res.setHeader('Content-Disposition', `attachment; filename="${req.file.originalname}"`);

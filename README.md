@@ -11,7 +11,8 @@ npm install
 `.env` dosyası oluşturun:
 
 ```env
-OPENROUTER_API_KEY=
+OPENROUTER_API_KEY=your_openrouter_api_key
+API_KEY=your_api_key
 PORT=3000
 ```
 
@@ -27,6 +28,7 @@ Altyazı dosyası gönderin:
 
 ```bash
 curl -X POST http://localhost:3000/api/translate \
+  -H "x-api-key: your_api_key" \
   -F "file=@altyazi.srt"
 ```
 
