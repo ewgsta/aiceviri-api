@@ -1,6 +1,6 @@
 # Translation API
 
-SRT ve VTT altyazı dosyalarını Türkçeye çeviren basit bir API.
+SRT ve VTT altyazı dosyalarını Türkçeye çeviren API.
 
 ## Kurulum
 
@@ -8,52 +8,111 @@ SRT ve VTT altyazı dosyalarını Türkçeye çeviren basit bir API.
 npm install
 ```
 
-`.env` dosyası oluşturun:
+`.env` dosyası oluştur:
 
 ```env
-OPENROUTER_API_KEY=your_openrouter_api_key
-API_KEY=your_api_key
+OPENROUTER_API_KEY=your_openrouter_key
+API_KEY=your_secret_key
 PORT=3000
 ```
 
-## Kullanım
-
-Sunucuyu başlatın:
+## Çalıştırma
 
 ```bash
 npm start
 ```
 
-Altyazı dosyası gönderin:
+## API Kullanımı
+
+### Endpoint
+
+```
+POST /api/translate
+```
+
+### Headers
+
+| Header | Zorunlu | Açıklama |
+|--------|---------|----------|
+| x-api-key | Evet | .env'deki API_KEY değeri |
+| Content-Type | Evet | multipart/form-data |
+
+### Body
+
+| Alan | Tip | Açıklama |
+|------|-----|----------|
+| file | File | .srt veya .vtt dosyası |
+
+### Örnek İstek (cURL)
 
 ```bash
 curl -X POST http://localhost:3000/api/translate \
-  -H "x-api-key: your_api_key" \
-  -F "file=@altyazi.srt"
+  -H "x-api-key: your_secret_key" \
+  -F "file=@subtitle.vtt"
 ```
 
-Çevrilen dosya otomatik olarak indirilir.
+### Örnek İstek (JavaScript)
 
-## Özellikler
+```javascript
+const formData = new FormData();
+formData.append('file', file);
 
-- SRT ve VTT format desteği
-- Grok 4.1 Fast model ile çeviri
-- Maksimum 5MB dosya boyutu
-- Zaman kodları ve format korunur
+const response = await fetch('http://localhost:3000/api/translate', {
+  method: 'POST',
+  headers: {
+    'x-api-key': 'your_secret_key'
+  },
+  body: formData
+});
+
+const blob = await response.blob();
+```
+
+### Başarılı Yanıt
+
+- Status: 200
+- Content-Type: text/plain
+- Content-Disposition: attachment; filename="original_filename.vtt"
+- Body: Çevrilmiş altyazı içeriği
+
+### Hata Yanıtları
+
+```json
+{
+  "error": {
+    "code": 1001,
+    "message": "Dosya yüklenmedi"
+  }
+}
+```
+
+| Kod | Açıklama |
+|-----|----------|
+| 1001 | Dosya yüklenmedi |
+| 1002 | Desteklenmeyen format |
+| 1003 | Dosya okunamadı |
+| 1004 | Dosya boyutu çok büyük (max 5MB) |
+| 2001 | API key eksik |
+| 2002 | API key geçersiz |
+| 3001 | OpenRouter API hatası |
+| 3002 | Model yanıt vermedi |
+| 3004 | Rate limit aşıldı |
 
 ## Vercel'e Deploy
 
-1. Vercel hesabınıza giriş yapın
-2. Projeyi GitHub'a yükleyin
-3. Vercel'de "New Project" ile projeyi import edin
-4. Environment Variables ekleyin:
+1. GitHub'a push et
+2. Vercel'de import et
+3. Environment variables ekle:
    - `OPENROUTER_API_KEY`
    - `API_KEY`
-5. Deploy edin
-
-Alternatif olarak Vercel CLI ile:
+4. Deploy
 
 ```bash
 npm i -g vercel
 vercel
 ```
+
+## Limitler
+
+- Max dosya boyutu: 5MB
+- Desteklenen formatlar: .srt, .vtt

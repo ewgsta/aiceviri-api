@@ -10,8 +10,9 @@ export async function translateSubtitle(content, format, apiKey) {
 3. Numaralandırmayı koru
 4. Sadece metinleri çevir
 5. Duygu ve ton'u koru
-6. Doğal Türkçe kullan
-7. Hiçbir açıklama ekleme, sadece çevrilmiş dosyayı döndür
+6. Doğal, günlük Türkçe kullan
+7. Eğer erotik kelime içeriyorsa türkçede günlük nasıl ise öyle çevir, duyguyu yaşat
+8. Hiçbir açıklama ekleme, sadece çevrilmiş dosyayı döndür
 
 Altyazı dosyası:
 

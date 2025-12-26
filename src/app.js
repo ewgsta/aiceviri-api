@@ -1,10 +1,22 @@
 import express from 'express';
+import cors from 'cors';
 import { config } from './config/config.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import translationRoutes from './routes/translationRoutes.js';
 
 const app = express();
 
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',
+    'https://aiceviri.ewgsta.me',
+    'https://translation-api.vercel.app'
+  ],
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type', 'x-api-key']
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.get('/health', (req, res) => {
